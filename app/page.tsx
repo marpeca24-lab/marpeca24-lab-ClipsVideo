@@ -28,15 +28,18 @@ export default function Home() {
               ¡Nuevo sistema de recompensas en USDT!
             </span>
             
-            <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-white mb-6 leading-[0.9]">
-              GANA DINERO <br />
+            <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-white mb-6 leading-[1.1]">
+              Convierte tus minutos de descanso <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-500">
-                VIENDO VIDEOS
+                en recompensas digitales
+              </span>
+              <span className="block text-xl md:text-2xl mt-4 text-gray-400 font-bold">
+                y ayuda a las marcas a mejorar sus videos
               </span>
             </h1>
             
             <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 font-medium">
-              Únete a la plataforma líder de micro-tareas de YouTube. 
+              Únete a la plataforma líder de micro-tareas. 
               Completa tareas simples, ayuda a creadores a ser virales y recibe USDT directamente en tu billetera.
             </p>
 
