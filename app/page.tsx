@@ -78,18 +78,18 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <FeatureCard 
               icon={<Play className="w-8 h-8 text-red-600" />}
-              title="Mira Videos"
-              description="Selecciona tareas de nuestra lista de videos virales de YouTube."
+              title="Explora y Disfruta"
+              description="Sumérgete en nuestra selección de videos virales. ¡Entretenerte nunca fue tan rentable!"
             />
             <FeatureCard 
               icon={<ShieldCheck className="w-8 h-8 text-emerald-500" />}
-              title="Completa Tareas"
-              description="Sigue las instrucciones: dale like, suscríbete o comenta para validar la tarea."
+              title="Interactúa en un Clic"
+              description="Dale like, suscríbete o deja un comentario. Tu opinión es lo que nos hace crecer."
             />
             <FeatureCard 
               icon={<DollarSign className="w-8 h-8 text-yellow-500" />}
-              title="Recibe USDT"
-              description="Una vez verificada, tu recompensa se acredita instantáneamente en tu balance."
+              title="Cobra al Instante"
+              description="Sin esperas ni letras chiquitas. Mira cómo tu balance en USDT crece en tiempo real"
             />
           </div>
         </div>
