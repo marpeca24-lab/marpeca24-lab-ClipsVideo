@@ -1,6 +1,6 @@
 'use client';
 
-import { Play, DollarSign, ExternalLink, CheckCircle } from 'lucide-react';
+import { Play, DollarSign, ExternalLink, CheckCircle, Clock } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface TaskCardProps {
@@ -9,6 +9,7 @@ interface TaskCardProps {
     title: string;
     description: string;
     reward: number;
+    timeLimit?: number;
     youtubeUrl: string;
     status: string;
   };
@@ -26,12 +27,17 @@ export default function TaskCard({ task, onSelect }: TaskCardProps) {
         <img 
           src={`https://img.youtube.com/vi/${task.youtubeUrl.split('v=')[1]?.split('&')[0] || 'default'}/maxresdefault.jpg`} 
           alt={task.title}
+          referrerPolicy="no-referrer"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
           <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
             <Play className="text-white fill-current w-6 h-6 ml-1" />
           </div>
+        </div>
+        <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md text-white px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 border border-white/10">
+          <Clock className="w-3 h-3 text-red-500" />
+          {task.timeLimit || 15} MIN
         </div>
         <div className="absolute top-3 right-3 bg-emerald-500 text-black px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
           <DollarSign className="w-3 h-3" />

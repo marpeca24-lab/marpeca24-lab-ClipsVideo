@@ -5,16 +5,23 @@
       "description": "User profile and balance information",
       "type": "object",
       "properties": {
-        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "uid": { "type": "string" },
         "email": { "type": "string", "format": "email" },
         "displayName": { "type": "string" },
         "photoURL": { "type": "string" },
-        "balance": { "type": "number", "description": "Balance in USDT" },
+        "country": { "type": "string", "description": "ISO Country Code" },
+        "balance": { "type": "number" },
         "tasksCompleted": { "type": "integer" },
         "role": { "type": "string", "enum": ["user", "admin"] },
+        "kycStatus": { "type": "string", "enum": ["none", "pending", "verified", "rejected"] },
+        "referralCode": { "type": "string" },
+        "referredBy": { "type": "string" },
+        "referralCount": { "type": "integer" },
+        "dailyTasksLimit": { "type": "integer" },
+        "withdrawalMin": { "type": "number" },
         "createdAt": { "type": "string", "format": "date-time" }
       },
-      "required": ["uid", "email", "balance", "role"]
+      "required": ["uid", "email", "balance", "role", "kycStatus", "referralCode"]
     },
     "Task": {
       "title": "Task",
@@ -23,12 +30,11 @@
       "properties": {
         "id": { "type": "string" },
         "title": { "type": "string" },
-        "description": { "type": "string" },
         "youtubeUrl": { "type": "string" },
-        "reward": { "type": "number", "description": "Reward in USDT" },
-        "instructions": { "type": "string" },
-        "status": { "type": "string", "enum": ["active", "paused", "completed"] },
-        "createdAt": { "type": "string", "format": "date-time" }
+        "reward": { "type": "number" },
+        "timeLimit": { "type": "integer", "description": "Time in minutes to complete the task" },
+        "status": { "type": "string", "enum": ["active", "paused"] },
+        "date": { "type": "string", "description": "YYYY-MM-DD for daily rotation" }
       },
       "required": ["title", "youtubeUrl", "reward", "status"]
     },
@@ -40,27 +46,32 @@
         "id": { "type": "string" },
         "taskId": { "type": "string" },
         "userId": { "type": "string" },
-        "proofUrl": { "type": "string", "description": "Screenshot or link proof" },
+        "proofUrl": { "type": "string" },
         "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
-        "submittedAt": { "type": "string", "format": "date-time" },
-        "reviewedAt": { "type": "string", "format": "date-time" },
-        "reviewNote": { "type": "string" }
+        "submittedAt": { "type": "string", "format": "date-time" }
       },
       "required": ["taskId", "userId", "status", "submittedAt"]
+    },
+    "Withdrawal": {
+      "title": "Withdrawal",
+      "description": "USDT withdrawal request",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "amount": { "type": "number" },
+        "network": { "type": "string", "enum": ["TRC20", "BEP20"] },
+        "address": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "completed", "rejected"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "amount", "network", "address", "status"]
     }
   },
   "firestore": {
-    "users/{userId}": {
-      "schema": "User",
-      "description": "User profiles"
-    },
-    "tasks/{taskId}": {
-      "schema": "Task",
-      "description": "Available tasks"
-    },
-    "submissions/{submissionId}": {
-      "schema": "Submission",
-      "description": "Task submissions"
-    }
+    "users/{userId}": { "schema": "User", "description": "User profiles" },
+    "tasks/{taskId}": { "schema": "Task", "description": "Daily tasks" },
+    "submissions/{submissionId}": { "schema": "Submission", "description": "Task submissions" },
+    "withdrawals/{withdrawalId}": { "schema": "Withdrawal", "description": "Withdrawal requests" }
   }
 }
