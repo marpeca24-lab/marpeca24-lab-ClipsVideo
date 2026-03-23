@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/components/FirebaseProvider';
-import { db, collection, query, onSnapshot, where, addDoc, serverTimestamp } from '@/firebase';
+import { db, collection, query, onSnapshot, where, addDoc, serverTimestamp, handleFirestoreError, OperationType } from '@/firebase';
 import TaskCard from '@/components/TaskCard';
 import { motion, AnimatePresence } from 'motion/react';
 import { Loader2, X, Play, Info, DollarSign, Send, Users, ShieldCheck, AlertCircle, TrendingUp, Copy, Check, Clock, Upload, Image as ImageIcon } from 'lucide-react';
@@ -43,7 +43,8 @@ export default function Dashboard() {
   useEffect(() => {
     if (authLoading || !user) return;
 
-    const q = query(collection(db, 'tasks'), where('status', '==', 'active'));
+    const path = 'tasks';
+    const q = query(collection(db, path), where('status', '==', 'active'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const tasksData = snapshot.docs.map(doc => ({
         id: doc.id,
@@ -52,7 +53,7 @@ export default function Dashboard() {
       setTasks(tasksData);
       setLoading(false);
     }, (error) => {
-      console.error("Error fetching tasks", error);
+      handleFirestoreError(error, OperationType.GET, path);
       setLoading(false);
     });
 
@@ -74,8 +75,9 @@ export default function Dashboard() {
     }
     setSubmitting(true);
     try {
+      const path = 'submissions';
       const base64Proof = await fileToBase64(proofFile);
-      await addDoc(collection(db, 'submissions'), {
+      await addDoc(collection(db, path), {
         taskId: selectedTask.id,
         userId: user!.uid,
         proofUrl: base64Proof,
@@ -87,7 +89,7 @@ export default function Dashboard() {
       setProofPreview(null);
       alert("¡Tarea enviada con éxito! Será revisada pronto.");
     } catch (error) {
-      console.error("Submission Error", error);
+      handleFirestoreError(error, OperationType.WRITE, 'submissions');
       alert("Error al enviar la tarea.");
     } finally {
       setSubmitting(false);

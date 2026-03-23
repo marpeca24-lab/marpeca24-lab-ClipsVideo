@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth, db, onAuthStateChanged, doc, getDoc, setDoc, updateDoc, FirebaseUser } from '@/firebase';
+import { auth, db, onAuthStateChanged, doc, getDoc, setDoc, updateDoc, FirebaseUser, handleFirestoreError, OperationType } from '@/firebase';
 
 interface AuthContextType {
   user: FirebaseUser | null;
@@ -40,8 +40,12 @@ export function FirebaseProvider({ children }: { children: React.ReactNode }) {
       withdrawalMin: 80,
       createdAt: new Date().toISOString()
     };
-    await setDoc(doc(db, 'users', uid), initialProfile);
-    setProfile(initialProfile);
+    try {
+      await setDoc(doc(db, 'users', uid), initialProfile);
+      setProfile(initialProfile);
+    } catch (error) {
+      handleFirestoreError(error, OperationType.WRITE, `users/${uid}`);
+    }
   };
 
   useEffect(() => {
@@ -49,20 +53,24 @@ export function FirebaseProvider({ children }: { children: React.ReactNode }) {
       setUser(user);
       if (user) {
         const docRef = doc(db, 'users', user.uid);
-        const docSnap = await getDoc(docRef);
-        
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          // Auto-upgrade to admin if email matches
-          if (user.email === ADMIN_EMAIL && data.role !== 'admin') {
-            await updateDoc(docRef, { role: 'admin' });
-            data.role = 'admin';
+        try {
+          const docSnap = await getDoc(docRef);
+          
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            // Auto-upgrade to admin if email matches
+            if (user.email === ADMIN_EMAIL && data.role !== 'admin') {
+              await updateDoc(docRef, { role: 'admin' });
+              data.role = 'admin';
+            }
+            setProfile(data);
+          } else {
+            // If user logged in via Google but profile doesn't exist
+            // We'll need a way to set country, but for now we'll default to 'AR'
+            await createProfile(user.uid, user.email || "", user.displayName || "Usuario", "AR");
           }
-          setProfile(data);
-        } else {
-          // If user logged in via Google but profile doesn't exist
-          // We'll need a way to set country, but for now we'll default to 'AR'
-          await createProfile(user.uid, user.email || "", user.displayName || "Usuario", "AR");
+        } catch (error) {
+          handleFirestoreError(error, OperationType.GET, `users/${user.uid}`);
         }
       } else {
         setProfile(null);

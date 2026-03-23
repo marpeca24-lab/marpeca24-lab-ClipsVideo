@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/components/FirebaseProvider';
-import { db, collection, query, onSnapshot, where, addDoc, updateDoc, doc, serverTimestamp, orderBy, increment } from '@/firebase';
+import { db, collection, query, onSnapshot, where, addDoc, updateDoc, doc, serverTimestamp, orderBy, increment, handleFirestoreError, OperationType } from '@/firebase';
 import { motion, AnimatePresence } from 'motion/react';
 import { Loader2, Plus, Check, X, ExternalLink, DollarSign, Play, Users, LayoutDashboard, Send, Trash2 } from 'lucide-react';
 
@@ -23,14 +23,20 @@ export default function AdminPanel() {
 
     const unsubTasks = onSnapshot(query(collection(db, 'tasks'), orderBy('createdAt', 'desc')), (snapshot) => {
       setTasks(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    }, (error) => {
+      handleFirestoreError(error, OperationType.GET, 'tasks');
     });
 
     const unsubSubmissions = onSnapshot(query(collection(db, 'submissions'), where('status', '==', 'pending')), (snapshot) => {
       setSubmissions(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    }, (error) => {
+      handleFirestoreError(error, OperationType.GET, 'submissions');
     });
 
     const unsubWithdrawals = onSnapshot(query(collection(db, 'withdrawals'), where('status', '==', 'pending')), (snapshot) => {
       setWithdrawals(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    }, (error) => {
+      handleFirestoreError(error, OperationType.GET, 'withdrawals');
     });
 
     setLoading(false);
@@ -54,7 +60,7 @@ export default function AdminPanel() {
       setNewTask({ title: '', youtubeUrl: '', reward: 0.10, timeLimit: 15 });
       alert("Tarea creada con éxito.");
     } catch (error) {
-      console.error("Task Creation Error", error);
+      handleFirestoreError(error, OperationType.WRITE, 'tasks');
       alert("Error al crear la tarea.");
     } finally {
       setSubmittingTask(false);
@@ -78,7 +84,7 @@ export default function AdminPanel() {
 
       alert("Tarea aprobada.");
     } catch (error) {
-      console.error("Approval Error", error);
+      handleFirestoreError(error, OperationType.WRITE, 'submissions/users');
     }
   };
 
@@ -90,7 +96,7 @@ export default function AdminPanel() {
       });
       alert("Tarea rechazada.");
     } catch (error) {
-      console.error("Rejection Error", error);
+      handleFirestoreError(error, OperationType.WRITE, 'submissions');
     }
   };
 
@@ -102,7 +108,7 @@ export default function AdminPanel() {
       });
       alert("Retiro aprobado.");
     } catch (error) {
-      console.error("Withdrawal Approval Error", error);
+      handleFirestoreError(error, OperationType.WRITE, 'withdrawals');
     }
   };
 
