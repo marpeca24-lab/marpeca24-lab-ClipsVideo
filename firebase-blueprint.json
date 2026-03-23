@@ -1,0 +1,66 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and balance information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "balance": { "type": "number", "description": "Balance in USDT" },
+        "tasksCompleted": { "type": "integer" },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "balance", "role"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "YouTube micro-task details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "youtubeUrl": { "type": "string" },
+        "reward": { "type": "number", "description": "Reward in USDT" },
+        "instructions": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "paused", "completed"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "youtubeUrl", "reward", "status"]
+    },
+    "Submission": {
+      "title": "Submission",
+      "description": "User submission for a task",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "taskId": { "type": "string" },
+        "userId": { "type": "string" },
+        "proofUrl": { "type": "string", "description": "Screenshot or link proof" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "submittedAt": { "type": "string", "format": "date-time" },
+        "reviewedAt": { "type": "string", "format": "date-time" },
+        "reviewNote": { "type": "string" }
+      },
+      "required": ["taskId", "userId", "status", "submittedAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "tasks/{taskId}": {
+      "schema": "Task",
+      "description": "Available tasks"
+    },
+    "submissions/{submissionId}": {
+      "schema": "Submission",
+      "description": "Task submissions"
+    }
+  }
+}
