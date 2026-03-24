@@ -9,7 +9,7 @@ interface AuthContextType {
   loading: boolean;
   signIn: () => Promise<void>;
   signOut: () => Promise<void>;
-  createProfile: (uid: string, email: string, displayName: string, country: string, referredBy?: string) => Promise<void>;
+  createProfile: (uid: string, email: string, displayName: string, country: string, profileType: string, referredBy?: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,7 +21,7 @@ export function FirebaseProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const createProfile = async (uid: string, email: string, displayName: string, country: string, referredBy?: string) => {
+  const createProfile = async (uid: string, email: string, displayName: string, country: string, profileType: string, referredBy?: string) => {
     const referralCode = Math.random().toString(36).substring(2, 8).toUpperCase();
     const initialProfile = {
       uid,
@@ -29,6 +29,7 @@ export function FirebaseProvider({ children }: { children: React.ReactNode }) {
       displayName,
       photoURL: `https://api.dicebear.com/7.x/avataaars/svg?seed=${uid}`,
       country,
+      profileType, // 'user' or 'client'
       balance: 0,
       tasksCompleted: 0,
       role: email === ADMIN_EMAIL ? 'admin' : 'user',
@@ -67,7 +68,7 @@ export function FirebaseProvider({ children }: { children: React.ReactNode }) {
           } else {
             // If user logged in via Google but profile doesn't exist
             // We'll need a way to set country, but for now we'll default to 'AR'
-            await createProfile(user.uid, user.email || "", user.displayName || "Usuario", "AR");
+            await createProfile(user.uid, user.email || "", user.displayName || "Usuario", "AR", "user");
           }
         } catch (error) {
           handleFirestoreError(error, OperationType.GET, `users/${user.uid}`);

@@ -31,9 +31,15 @@ const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
 // Use initializeFirestore to set experimentalForceLongPolling
-export const db = initializeFirestore(app, {
+const dbSettings = {
   experimentalForceLongPolling: true,
-}, (firebaseConfig as any).firestoreDatabaseId || '(default)');
+};
+
+const databaseId = (firebaseConfig as any).firestoreDatabaseId;
+
+export const db = databaseId && databaseId !== '(default)'
+  ? initializeFirestore(app, dbSettings, databaseId)
+  : initializeFirestore(app, dbSettings);
 
 export const googleProvider = new GoogleAuthProvider();
 

@@ -6,7 +6,7 @@ import { createUserWithEmailAndPassword, auth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'motion/react';
-import { Mail, Lock, User, Globe, ArrowRight, Loader2 } from 'lucide-react';
+import { Mail, Lock, User, Globe, ArrowRight, Loader2, UserCircle, Briefcase, Ticket } from 'lucide-react';
 
 const COUNTRIES = [
   { code: 'AR', name: 'Argentina' },
@@ -38,6 +38,8 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [country, setCountry] = useState('AR');
+  const [profileType, setProfileType] = useState<'user' | 'client'>('user');
+  const [referralCode, setReferralCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -48,7 +50,7 @@ export default function Register() {
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      await createProfile(userCredential.user.uid, email, displayName, country);
+      await createProfile(userCredential.user.uid, email, displayName, country, profileType, referralCode);
       router.push('/dashboard');
     } catch (err: any) {
       setError(err.message);
@@ -69,6 +71,39 @@ export default function Register() {
         </div>
 
         <form onSubmit={handleRegister} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <button
+              type="button"
+              onClick={() => setProfileType('user')}
+              className={`p-4 rounded-2xl border transition-all flex flex-col items-center gap-2 ${
+                profileType === 'user' 
+                ? 'bg-red-600/10 border-red-600 text-red-500' 
+                : 'bg-zinc-800 border-zinc-700 text-gray-400 hover:border-zinc-600'
+              }`}
+            >
+              <UserCircle className="w-6 h-6" />
+              <div className="text-center">
+                <p className="text-xs font-black uppercase">Usuario</p>
+                <p className="text-[10px] opacity-70">(Quiero ganar dinero)</p>
+              </div>
+            </button>
+            <button
+              type="button"
+              onClick={() => setProfileType('client')}
+              className={`p-4 rounded-2xl border transition-all flex flex-col items-center gap-2 ${
+                profileType === 'client' 
+                ? 'bg-red-600/10 border-red-600 text-red-500' 
+                : 'bg-zinc-800 border-zinc-700 text-gray-400 hover:border-zinc-600'
+              }`}
+            >
+              <Briefcase className="w-6 h-6" />
+              <div className="text-center">
+                <p className="text-xs font-black uppercase">Cliente</p>
+                <p className="text-[10px] opacity-70">(Quiero contratar personas)</p>
+              </div>
+            </button>
+          </div>
+
           <div>
             <label className="block text-sm font-bold text-gray-400 mb-1.5 ml-1">Nombre Completo</label>
             <div className="relative">
@@ -129,6 +164,26 @@ export default function Register() {
               </select>
             </div>
           </div>
+
+          {profileType === 'user' && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="overflow-hidden"
+            >
+              <label className="block text-sm font-bold text-gray-400 mb-1.5 ml-1">Código de Referencia (Opcional)</label>
+              <div className="relative">
+                <Ticket className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <input 
+                  type="text" 
+                  value={referralCode}
+                  onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                  placeholder="ABC123"
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-red-600 transition-colors"
+                />
+              </div>
+            </motion.div>
+          )}
 
           {error && <p className="text-red-500 text-sm font-medium text-center">{error}</p>}
 
