@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { Play, TrendingUp, DollarSign, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Play, TrendingUp, DollarSign, ShieldCheck, ArrowRight, Youtube, Instagram, Music } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/components/FirebaseProvider';
 
@@ -215,6 +215,107 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Creators Section */}
+      <section className="w-full py-40 bg-black px-6 border-t border-white/5 relative overflow-hidden">
+        {/* Animated background glows */}
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.1, 0.2, 0.1]
+          }}
+          transition={{ duration: 10, repeat: Infinity }}
+          className="absolute top-0 right-0 w-[1000px] h-[1000px] bg-red-600/10 rounded-full blur-[180px] pointer-events-none" 
+        />
+        
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-20 items-center mb-24">
+            <div className="lg:col-span-3">
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-red-600/10 border border-red-600/20 text-xs font-black tracking-[0.4em] text-red-500 uppercase mb-10"
+              >
+                IMPULSO ESTRATÉGICO
+              </motion.div>
+              
+              <motion.h2 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="text-5xl md:text-7xl xl:text-8xl font-black tracking-tighter mb-10 leading-[0.9] text-white"
+              >
+                ¿Eres creador de Contenido y <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-500">
+                  las vistas no aumentan?
+                </span>
+              </motion.h2 >
+              
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2, duration: 0.8 }}
+                className="text-2xl md:text-3xl text-zinc-300 font-bold leading-tight mb-8"
+              >
+                ClipsVideo es la solución real que estabas buscando.
+              </motion.p>
+
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3, duration: 0.8 }}
+                className="text-lg text-zinc-500 font-medium max-w-2xl leading-relaxed"
+              >
+                En ClipsVideo no creemos en números vacíos, sino en crecimiento estratégico. 
+                Diseñamos campañas personalizadas donde usuarios reales consumen tu contenido de principio a fin, 
+                impulsando tus métricas de retención, interacción y posicionamiento orgánico. 
+                Olvídate del engagement artificial; aquí cada clic es una acción verificable que le dice a los algoritmos que tu contenido merece estar en la cima.
+              </motion.p>
+            </div>
+
+            <div className="lg:col-span-2 hidden lg:block">
+               {/* Visual element for creators */}
+               <motion.div 
+                 initial={{ opacity: 0, scale: 0.9 }}
+                 whileInView={{ opacity: 1, scale: 1 }}
+                 viewport={{ once: true }}
+                 className="relative aspect-square bg-zinc-900 rounded-[3rem] border border-white/5 flex items-center justify-center overflow-hidden group"
+               >
+                 <div className="absolute inset-0 bg-gradient-to-br from-red-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                 <TrendingUp className="w-40 h-40 text-red-600 opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
+                 <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-32 h-32 bg-red-600 rounded-full blur-3xl opacity-20 animate-pulse" />
+                 </div>
+               </motion.div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <CreatorCard 
+              icon={<Youtube className="w-8 h-8 text-white" />}
+              platform="YouTube"
+              title="Domina el Algoritmo con Retención Real"
+              description="¿Cansado de que el algoritmo ignore tus videos? En ClipsVideo impulsamos tu canal con audiencia auténtica. No vendemos números, generamos retención real: usuarios que ven tu contenido y realizan acciones verificables que disparan tu posicionamiento. Haz que YouTube trabaje para ti con engagement que sí cuenta."
+            />
+            <CreatorCard 
+              icon={<Instagram className="w-8 h-8 text-white" />}
+              platform="Instagram"
+              title="Reels que se vuelven Virales"
+              description="El alcance orgánico es difícil, pero no imposible. Con ClipsVideo, tus Reels e historias reciben el empuje de usuarios reales. Aumentamos tu interacción y guardados mediante campañas transparentes, logrando que Instagram detecte interés genuino y te posicione en la sección de Explorar. Crecimiento sólido, sin trucos."
+            />
+            <CreatorCard 
+              icon={<Music className="w-8 h-8 text-white" />}
+              platform="TikTok"
+              title="De 'Para Ti' a Comunidad Real"
+              description="En TikTok, los primeros segundos lo son todo. ClipsVideo conecta tu contenido con personas reales que consumen, comentan y comparten, elevando tus métricas de interacción desde el primer momento. Olvídate del 'engagement vacío'; construye una presencia relevante basada en comportamiento humano verificable."
+            />
+          </div>
+        </div>
+      </section>
+
       {/* Stats Section */}
       <section className="w-full py-24 bg-black px-6 border-y border-white/5">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-12 text-center">
@@ -247,6 +348,32 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode, titl
       </div>
       <h3 className="text-2xl font-black text-white mb-4 tracking-tight uppercase">{title}</h3>
       <p className="text-zinc-400 leading-relaxed font-medium text-lg">{description}</p>
+    </motion.div>
+  );
+}
+
+function CreatorCard({ icon, platform, title, description }: { icon: React.ReactNode, platform: string, title: string, description: string }) {
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      whileHover={{ y: -10 }}
+      className="p-8 bg-zinc-900/50 border border-white/5 rounded-[2rem] transition-all duration-300 backdrop-blur-md relative group overflow-hidden"
+    >
+      {/* Platform Badge */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="p-3 bg-white/5 rounded-xl group-hover:bg-orange-500 transition-colors duration-300">
+          {icon}
+        </div>
+        <span className="text-xs font-black uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors">{platform}</span>
+      </div>
+      
+      <h3 className="text-xl font-black text-white mb-4 tracking-tight leading-tight">{title}</h3>
+      <p className="text-zinc-400 leading-relaxed font-medium text-sm">{description}</p>
+      
+      {/* Decorative background element */}
+      <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-orange-500/5 rounded-full blur-3xl group-hover:bg-orange-500/10 transition-all" />
     </motion.div>
   );
 }
