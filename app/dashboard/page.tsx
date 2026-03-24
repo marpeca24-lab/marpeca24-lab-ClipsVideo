@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/components/FirebaseProvider';
 import { db, collection, query, onSnapshot, where, addDoc, serverTimestamp, handleFirestoreError, OperationType } from '@/firebase';
 import TaskCard from '@/components/TaskCard';
+import ClientDashboard from '@/components/ClientDashboard';
 import { motion, AnimatePresence } from 'motion/react';
 import { Loader2, X, Play, Info, DollarSign, Send, Users, ShieldCheck, AlertCircle, TrendingUp, Copy, Check, Clock, Upload, Image as ImageIcon } from 'lucide-react';
 
@@ -41,7 +42,10 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (authLoading || !user || profile?.profileType === 'client') {
+      if (profile?.profileType === 'client') setLoading(false);
+      return;
+    }
 
     const path = 'tasks';
     const q = query(collection(db, path), where('status', '==', 'active'));
@@ -58,7 +62,7 @@ export default function Dashboard() {
     });
 
     return () => unsubscribe();
-  }, [authLoading, user]);
+  }, [authLoading, user, profile?.profileType]);
 
   const copyReferral = () => {
     if (profile?.referralCode) {
@@ -105,6 +109,11 @@ export default function Dashboard() {
   }
 
   if (!user) return null;
+
+  // Render Client Dashboard if profileType is 'client'
+  if (profile?.profileType === 'client') {
+    return <ClientDashboard />;
+  }
 
   // Filter tasks based on daily limit
   const dailyLimit = profile?.dailyTasksLimit || 4;

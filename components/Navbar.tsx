@@ -25,15 +25,6 @@ export default function Navbar() {
 
           <div className="hidden md:block">
             <div className="flex items-center space-x-8">
-              <Link href="/dashboard" className="text-zinc-400 hover:text-white text-sm font-semibold transition-all duration-300 hover:tracking-wider">
-                TAREAS
-              </Link>
-              <Link href="/kyc" className="text-zinc-400 hover:text-white text-sm font-semibold transition-all duration-300 hover:tracking-wider">
-                VERIFICACIÓN
-              </Link>
-              <Link href="/withdraw" className="text-zinc-400 hover:text-white text-sm font-semibold transition-all duration-300 hover:tracking-wider">
-                RETIROS
-              </Link>
               {profile?.role === 'admin' && (
                 <Link href="/admin" className="text-orange-500 hover:text-orange-400 text-sm font-black transition-all duration-300 hover:tracking-wider">
                   ADMIN
